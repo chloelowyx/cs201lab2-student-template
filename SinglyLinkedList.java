@@ -113,36 +113,36 @@ public class SinglyLinkedList<E extends Comparable<E>> {
     }
 
     public void swap() {
-        ArrayList<E> sorted = sortedArrayList(head);
+        ArrayList<E> sorted = sortedArrayList(head);                //array of elements sorted
 
-        ArrayList<Node<E>> nodes = new ArrayList<>();
-        Map<E, Integer> positions = new HashMap<>();
+        ArrayList<Node<E>> nodes = new ArrayList<>();               //arraylist to store nodes
+        Map<E, Integer> positions = new HashMap<>();                //map of elements to their original positions
         Node<E> curr = head;
         int index = 0;
-        while (curr != null) {
-            nodes.add(curr);
-            positions.put(curr.getElement(), index);
+        while (curr != null) {                                      //traverse through LL
+            nodes.add(curr);                                        //add all nodes to arraylist
+            positions.put(curr.getElement(), index);                //add all elements to map
             curr = curr.getNext();
             index++;
         }
 
-        for (int i = 0; i < size / 2; i++) {
-            E left = sorted.get(i);
-            E right = sorted.get(size - i - 1);
+        for (int i = 0; i < size / 2; i++) {                        //run through first half of sorted array
+            E left = sorted.get(i);                                 //smaller element
+            E right = sorted.get(size - i - 1);                     //larger element
 
-            if (left.equals(right)) {
-                continue;
+            if (left.equals(right)) {                               //middle element of odd sized array 
+                continue;                                           //no need swap
             }
 
-            int leftindex = positions.get(left);
-            int rightindex = positions.get(right);
+            int leftindex = positions.get(left);                    //original position of smaller element
+            int rightindex = positions.get(right);                  //original position of larger element
 
-            Node<E> temp = nodes.get(leftindex);
+            Node<E> temp = nodes.get(leftindex);                    //swap positions of 2 elements
             nodes.set(leftindex, nodes.get(rightindex));
             nodes.set(rightindex, temp);
         }
 
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size - 1; i++) {                        //reconstruct LL with new order of nodes
             nodes.get(i).setNext(nodes.get(i+1));
         }
         head = nodes.get(0);
