@@ -123,12 +123,16 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             nodes.add(curr);
             positions.put(curr.getElement(), index);
             curr = curr.getNext();
-            index += 1;
+            index++;
         }
 
-        while (sorted.size() > 1) {
-            E left = sorted.get(0);
-            E right = sorted.get(sorted.size() - 1);
+        for (int i = 0; i < size / 2; i++) {
+            E left = sorted.get(i);
+            E right = sorted.get(size - i - 1);
+
+            if (left.equals(right)) {
+                continue;
+            }
 
             int leftindex = positions.get(left);
             int rightindex = positions.get(right);
@@ -136,9 +140,6 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             Node<E> temp = nodes.get(leftindex);
             nodes.set(leftindex, nodes.get(rightindex));
             nodes.set(rightindex, temp);
-
-            sorted.remove(right);
-            sorted.remove(left);
         }
 
         for (int i = 0; i < size - 1; i++) {
