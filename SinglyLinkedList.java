@@ -112,67 +112,43 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         return sorted;
     }
 
-    public void swap(){
-        ArrayList<E> sorted = sortedArrayList(head);                //array of elements sorted
-        int arrSize = size;                                        
-        Node<E> left = head;                                        //left node to swap
-        Node<E> leftprev = null;                                    //previous node to left node
+    public void swap() {
+        ArrayList<E> sorted = sortedArrayList(head);
 
-        while (left != null) {                                      //traverse all nodes in LL
-            int leftindex = sorted.indexOf(left.getElement());      //index of left element in sorted array
-            if (leftindex < 0 || leftindex >= arrSize) {            //if element not found in sorted array
-                leftprev = left;                                    //means swapped already
-                left = left.getNext();
-                continue;                                           //continue to next node
-            }
-            int rightindex = arrSize - leftindex - 1;               //index of other element to be swapped
-            if (leftindex == rightindex) {                          //middle element
-                leftprev = left;                                    //no need swap
-                left = left.getNext();
-                continue;                                           //continue to next node
-            }
-
-            Node<E> right = left.getNext();                         //finding other node to swap
-            Node<E> rightprev = left;
-            while (!right.getElement().equals(sorted.get(rightindex))) {
-                rightprev = right;
-                right = right.getNext();
-            }
-
-            E leftelement = left.getElement();                      //left element to be swapped
-            E rightelement = right.getElement();                    //right element to be swapped
-
-            Node<E> leftnext = left.getNext();                      //node manipulation to swap nodes
-            Node<E> rightnext = right.getNext();
-            left.setNext(rightnext);
-            if (leftnext.equals(right)) {                           //if nodes side by side
-                right.setNext(left);
-            } else {                                                //if nodes separated by at least one node
-                right.setNext(leftnext);
-                rightprev.setNext(left);
-            }
-
-            if (leftprev != null) {                                 //if left node not head node
-                leftprev.setNext(right);
-            }
-
-            if (head.equals(left)) {                                //if any change in head node
-                head = right;
-            }
-
-            if (tail.equals(right)) {                               //if any change in tail node
-                tail = left;
-            }
-
-            sorted.remove(leftelement);                             //remove swapped elements from sorted array
-            sorted.remove(rightelement);
-
-            leftprev = right;                                       //next node
-            left = right.getNext();
-            arrSize -= 2;                                           //decrease array size
-            
+        ArrayList<Node<E>> nodes = new ArrayList<>();
+        Map<E, Integer> positions = new HashMap<>();
+        Node<E> curr = head;
+        int index = 0;
+        while (curr != null) {
+            nodes.add(curr);
+            positions.put(curr.getElement(), index);
+            curr = curr.getNext();
+            index += 1;
         }
 
+        while (sorted.size() > 1) {
+            E left = sorted.get(0);
+            E right = sorted.get(sorted.size() - 1);
+
+            int leftindex = positions.get(left);
+            int rightindex = positions.get(right);
+
+            Node<E> temp = nodes.get(leftindex);
+            nodes.set(leftindex, nodes.get(rightindex));
+            nodes.set(rightindex, temp);
+
+            sorted.remove(right);
+            sorted.remove(left);
+        }
+
+        for (int i = 0; i < size - 1; i++) {
+            nodes.get(i).setNext(nodes.get(i+1));
+        }
+        head = nodes.get(0);
+        tail = nodes.get(size - 1);
+        nodes.get(size - 1).setNext(null);
+
+        
     }
    
 }
